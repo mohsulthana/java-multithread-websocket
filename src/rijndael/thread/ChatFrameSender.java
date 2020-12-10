@@ -275,6 +275,7 @@ public class ChatFrameSender extends javax.swing.JFrame {
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex)", CryptoUtils.hex(encryptedText))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Key (hex)", CryptoUtils.hex(aes.secretKey.getEncoded())));
+            logArea.append(String.format(OUTPUT_FORMAT, "Decrypted (plain text)", decryptedText)  + "\n");
 
             SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
             Date date = new Date(System.currentTimeMillis());
@@ -349,9 +350,9 @@ public class ChatFrameSender extends javax.swing.JFrame {
             long elapsedTimeTotal = System.currentTimeMillis() - startEnc; // FULL TIME
             
             // HASIL DEKRIPSI
-            String hasilDekripsi = "";
+            String decryptedText = "";
             for (int i = 0; i < 2; i++)
-                hasilDekripsi += ThreadDecrypt.get(i).plain;
+                decryptedText += ThreadDecrypt.get(i).plain;
             
             // SET TEXT SECTION
             waktuEnkripsi.setText(Double.toString(elapsedTimeInSecondEnc) + " detik");
@@ -363,12 +364,13 @@ public class ChatFrameSender extends javax.swing.JFrame {
             logArea.append(String.format(OUTPUT_FORMAT, "Encrypted (hex) ", CryptoUtils.hex(encryptedText))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Encrypted (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
             
-            penerima.append(format("[%s:%s] %s", formatter.format(date), "Sulthan", hasilDekripsi) + "\n");
+            penerima.append(format("[%s:%s] %s", formatter.format(date), "Sulthan", decryptedText) + "\n");
             pengirimField.setText("");
             
             logArea.append("\n\n------ AES GCM Decryption ------\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex)", CryptoUtils.hex(encryptedText))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
+            logArea.append(String.format(OUTPUT_FORMAT, "Decrypted (plain text)", decryptedText)  + "\n");
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(ChatFrameSender.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -429,9 +431,9 @@ public class ChatFrameSender extends javax.swing.JFrame {
             waitThreadEnd(ThreadDecrypt); // TUNGGU THREAD SELESAI
             
             // HASIL DEKRIPSI
-            String hasilDekripsi = "";
+            String decryptedText = "";
             for (int i = 0; i < 2; i++)
-                hasilDekripsi += ThreadDecrypt.get(i).plain;
+                decryptedText += ThreadDecrypt.get(i).plain;
             
             long elapsedTimeDec = System.currentTimeMillis() - startDec;
             double elapsedTimeInSecondDec = (double) elapsedTimeDec / 1000F;
@@ -447,13 +449,13 @@ public class ChatFrameSender extends javax.swing.JFrame {
             logArea.append(String.format(OUTPUT_FORMAT, "Encrypted (hex) ", CryptoUtils.hex(encryptedText))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Encrypted (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
             
-            penerima.append(format("[%s:%s] %s", formatter.format(date), "Sulthan", hasilDekripsi) + "\n");
+            penerima.append(format("[%s:%s] %s", formatter.format(date), "Sulthan", decryptedText) + "\n");
             pengirimField.setText("");
             
             logArea.append("\n\n------ AES GCM Decryption ------\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex)", CryptoUtils.hex(encryptedText))  + "\n");
             logArea.append(String.format(OUTPUT_FORMAT, "Input (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
-            
+            logArea.append(String.format(OUTPUT_FORMAT, "Decrypted (plain text)", decryptedText)  + "\n");
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(ChatFrameSender.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -471,8 +473,6 @@ public class ChatFrameSender extends javax.swing.JFrame {
             {
                 String imagePath = chooser.getSelectedFile().getAbsolutePath();
                 String base64Image = FileEncryption.encoder(imagePath);
-                String OUTPUT_FORMAT = "%-30s:%s";
-                
                 
                 EncryptorAesGcm aes = new EncryptorAesGcm();
                 long startEnc = System.currentTimeMillis();                
@@ -481,8 +481,24 @@ public class ChatFrameSender extends javax.swing.JFrame {
                 
                 long elapsedTimeEnc = System.currentTimeMillis() - startEnc;
                 double elapsedTimeInSecondEnc = (double) elapsedTimeEnc / 1000F;
-                waktuEnkripsi.setText(Double.toString(elapsedTimeInSecondEnc) + " detik");
 
+                long startDec = System.currentTimeMillis();
+                
+                String decryptedText = aes.decryptWithPrefixIV(encryptedText);
+                
+                long elapsedTimeDec = System.currentTimeMillis() - startDec;
+                double elapsedTimeInSecondDec = (double) elapsedTimeDec / 1000F;
+                
+                long elapsedTimeTotal = System.currentTimeMillis() - startEnc;
+
+                
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+                Date date = new Date(System.currentTimeMillis());
+                
+                // SET TEXT SECTION                
+                waktuEnkripsi.setText(Double.toString(elapsedTimeInSecondEnc) + " detik");
+                waktuPengirimanPesan.setText(Double.toString((double) elapsedTimeTotal / 1000F) + " detik");
+                waktuDekripsi.setText(Double.toString(elapsedTimeInSecondDec) + " detik");
 
                 logArea.setText("\n------ AES GCM Encryption File Single Thread ------\n");
                 logArea.append(String.format(OUTPUT_FORMAT, "Input (plain text)", base64Image) + "\n");
@@ -492,24 +508,7 @@ public class ChatFrameSender extends javax.swing.JFrame {
                 logArea.append("\n\n------ AES GCM Decryption File Single Thread ------\n");
                 logArea.append(String.format(OUTPUT_FORMAT, "Input (hex)", CryptoUtils.hex(encryptedText))  + "\n");
                 logArea.append(String.format(OUTPUT_FORMAT, "Input (hex) (block = 16)", CryptoUtils.hexWithBlockSize(encryptedText, 16))  + "\n");
-
-                long startDec = System.currentTimeMillis();
-                
-                String decryptedText = aes.decryptWithPrefixIV(encryptedText);
-                
-                long elapsedTimeDec = System.currentTimeMillis() - startDec;
-                double elapsedTimeInSecondDec = (double) elapsedTimeDec / 1000F;
-                waktuDekripsi.setText(Double.toString(elapsedTimeInSecondDec) + " detik");
-                
-                long elapsedTimeTotal = System.currentTimeMillis() - startEnc;
-                waktuPengirimanPesan.setText(Double.toString((double) elapsedTimeTotal / 1000F) + " detik");
-
                 logArea.append(String.format(OUTPUT_FORMAT, "Decrypted (plain text)", decryptedText)  + "\n");
-                
-                SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-                Date date = new Date(System.currentTimeMillis());
-                
-                penerima.append("\n------ AES GCM Encryption File Single Thread ------\n");
                 penerima.append(format("[%s:%s] %s", formatter.format(date), "Sulthan", decryptedText) + "\n");
             }
             catch (Exception ex)
@@ -522,7 +521,7 @@ public class ChatFrameSender extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("ZIP & RAR Files", "zip", "rar");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ZIP", "zip");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
         
@@ -539,7 +538,7 @@ public class ChatFrameSender extends javax.swing.JFrame {
 
             try {
                 // BUAT AES SEBANYAK JUMLAH THREAD
-                List<EncryptorAesGcm> aes = new ArrayList<EncryptorAesGcm>();
+                List<EncryptorAesGcm> aes = new ArrayList<>();
                 for (int i = 0; i < jumlah_thread; i++) {
                     aes.add(new EncryptorAesGcm());
                 }
@@ -593,7 +592,7 @@ public class ChatFrameSender extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("ZIP & RAR Files", "zip", "rar");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ZIP", "zip");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
         
