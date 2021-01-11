@@ -3,6 +3,7 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Criptoapp"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -39,18 +40,18 @@
                           <Component id="jScrollPane2" alignment="0" min="-2" pref="378" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="selectFileSingle" alignment="0" max="32767" attributes="0"/>
                                   <Component id="kirimSingleThread" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="kirimPengirim1" min="-2" pref="118" max="-2" attributes="0"/>
+                                      <Component id="kirimDualThread" min="-2" pref="118" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="kirimPengirim2" min="-2" pref="118" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jButton2" min="-2" pref="118" max="-2" attributes="0"/>
+                                      <Component id="selectFileMulti" min="-2" pref="118" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jButton3" min="-2" pref="118" max="-2" attributes="0"/>
                                   </Group>
@@ -103,7 +104,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="kirimSingleThread" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="kirimPengirim1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="kirimDualThread" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="kirimPengirim2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -112,8 +113,8 @@
                       <Component id="waktuPengirimanPesan" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="selectFileSingle" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="selectFileMulti" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="waktuEnkripsi" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -189,12 +190,12 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="kirimPengirim1">
+    <Component class="javax.swing.JButton" name="kirimDualThread">
       <Properties>
         <Property name="text" type="java.lang.String" value=" Kirim - 2"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="kirimPengirim1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="kirimDualThreadActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="kirimPengirim2">
@@ -210,12 +211,12 @@
         <Property name="text" type="java.lang.String" value="Logger"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="selectFileSingle">
       <Properties>
         <Property name="text" type="java.lang.String" value="Select File - 1"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectFileSingleActionPerformed"/>
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane4">
@@ -241,12 +242,12 @@
         <Property name="text" type="java.lang.String" value="Penerima"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="selectFileMulti">
       <Properties>
         <Property name="text" type="java.lang.String" value="Select File - 2"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectFileMultiActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton3">

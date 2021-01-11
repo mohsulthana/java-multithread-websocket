@@ -5,67 +5,57 @@
  */
 package rijndael.thread;
 
-import rijndael.util.CryptoUtils;
 import rijndael.crypto.EncryptorAesGcm;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 
-/**
- *
- * @author sulthan
- */
-
 public class MyThread extends Thread{
+   // VAR THREAD
    public Thread t;
    public String threadName;
+   // VAR CRYPTO
+   public byte[] input;
+   public SecretKey secretKey;
+   
    public String plain;
    public byte[] cipher;
+   
    public String process;
-   SecretKey secret;
    public boolean status = true;
+   public EncryptorAesGcm aes;
    
-   private static final int IV_LENGTH_BYTE = 12;
-   
-   public MyThread(String name, String str, String p, SecretKey key) {
+   MyThread(EncryptorAesGcm aes ,String name, byte[] input, String process) {
         threadName    = name;
-        process       = p;
-        secret        = key;
-        System.out.println("Creating " +  threadName );
-        
-        // JIKA ENKRIPSI, MAKA STR ADALAH PLAINTEXT
-        if("e".equals(process))
-            plain = str;
-        // JIKA DEKRIPSI, MAKA STR ADALAH CIPHERTEXT
-        else
-            cipher = str.getBytes();
-        
-   }
+        this.process = process;
+        this.input   = input;
+        this.aes     = aes;
+    }
    
-   @Override
+    @Override
     public void run() {
-        byte[] iv = CryptoUtils.getRandomNonce(IV_LENGTH_BYTE);
-        try {
-            // DO ENCRYPTION
-            if("e".equals(process)) {
-                cipher = EncryptorAesGcm.encryptWithPrefixIV(plain.getBytes(UTF_8));
+        // DO ENCRYPTION   
+        if(process == "e") {
+            try {
+                cipher = aes.encrypt(input);
+            } catch (Exception ex) {
+                Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //DO DECRYPTION
-            else
-            {
-                plain = EncryptorAesGcm.decryptWithPrefixIV(cipher);
+        }
+        //DO DECRYPTION
+        else {
+            try {
+                plain = aes.decrypt(input);
+            } catch (Exception ex) {
+                Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            status = false;
-        } catch (Exception ex) {
-           Logger.getLogger(MyThread2.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        }
+        status = false;
    }
    
    @Override
    public void start () {
-      System.out.println("Starting " +  threadName );
       if (t == null) {
          t = new Thread (this, threadName);
          t.start ();

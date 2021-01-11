@@ -3,10 +3,13 @@ package rijndael.crypto;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,20 +17,10 @@ import java.io.FileOutputStream;
  */
 public class FileEncryption
 {
-  public static void main(String[] args)
-  {
-    String imagePath = "/home/sulthan/Roboto.zip";
-    System.out.println("=================Encoder Image to Base 64!=================");
-    String base64ImageString = encoder(imagePath);
-    System.out.println("Base64ImageString = " + base64ImageString);
+    SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+    Date date = new Date(System.currentTimeMillis());
  
-    System.out.println("=================Decoder Base64ImageString to Image!=================");
-    decoder(base64ImageString, "C:\\base64\\decoderimage.jpg");
- 
-    System.out.println("DONE!");
-  }
- 
-  public static String encoder(String imagePath)
+  public static String encoder(String imagePath) throws Exception
   {
     String base64Image = "";
     File file = new File(imagePath);
@@ -41,45 +34,33 @@ public class FileEncryption
     }
     catch (FileNotFoundException e)
     {
-      System.out.println("Image not found" + e);
+        Logger.getLogger(FileEncryption.class.getName()).log(Level.SEVERE, null, e);
     }
     catch (IOException e)
     {
-      System.out.println("Exception while reading the Image " + e);
+        Logger.getLogger(FileEncryption.class.getName()).log(Level.SEVERE, null, e);
     }
-    
     return base64Image;
   }
  
-  public static void decoder(String base64Image, String pathFile)
+  public void decoder(String base64Image, String pathFile)
   {
     try (FileOutputStream imageOutFile = new FileOutputStream(pathFile))
     {
       // Converting a Base64 String into Image byte array
       byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
-      System.out.println(imageByteArray);
       imageOutFile.write(imageByteArray);
       
-                  String fileName = "laaaaaol.zip";
+      String fileName = "Result file - "  + date + ".zip";
 
-      
-      try
-      {
-          FileOutputStream fos = new FileOutputStream("/home/sulthan/"+fileName);
-                fos.write(imageByteArray);
-             } catch(Exception e)
-             {
-                       System.out.println("Exception while reading the Image " + e);
-
-             }
+      FileOutputStream fos = new FileOutputStream("/home/sulthan/Documents/Skripsi/Program/data/Decoded/"+fileName, true);
+      fos.write(imageByteArray);
     }
-    catch (FileNotFoundException e)
-    {
-      System.out.println("Image not found" + e);
+    catch (FileNotFoundException e) {
+        Logger.getLogger(FileEncryption.class.getName()).log(Level.SEVERE, null, e);
     }
-    catch (IOException ioe)
-    {
-      System.out.println("Exception while reading the Image " + ioe);
+    catch (IOException e) {
+        Logger.getLogger(FileEncryption.class.getName()).log(Level.SEVERE, null, e);
     }
   }
 }
